@@ -1,0 +1,179 @@
+{
+  "id": "${KC_REALM_NAME}",
+  "realm": "${KC_REALM_NAME}",
+  "sslRequired": "none",
+  "enabled": true,
+  "eventsEnabled": true,
+  "eventsExpiration": 900,
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true,
+  "attributes": {
+    "adminEventsExpiration": "900"
+  },
+  "roles": {
+    "realm": [],
+    "client": {
+      "desa-cli": [],
+      "grafana": [
+        {
+          "id": "ff2a9eab-8e39-4660-b6d8-40b09269bffc",
+          "name": "editor",
+          "description": "Grafana editor",
+          "composite": false,
+          "clientRole": true,
+          "attributes": {}
+        },
+        {
+          "id": "ff2a9eab-8e39-4660-b6d8-40b09269bffb",
+          "name": "admin",
+          "description": "Grafana admin",
+          "composite": false,
+          "clientRole": true,
+          "attributes": {}
+        },
+        {
+          "id": "ff2a9eab-8e39-4660-b6d8-40b09269bffa",
+          "name": "viewer",
+          "description": "Grafana viewer",
+          "composite": false,
+          "clientRole": true,
+          "attributes": {}
+        },
+        {
+          "id": "ff2a9eab-8e39-4660-b6d8-40b09269bfff",
+          "name": "grafanaadmin",
+          "description": "Grafana Super User",
+          "composite": false,
+          "clientRole": true,
+          "attributes": {}
+        }
+      ]
+    }
+  }, 
+  "groups": [],
+  "users": [
+    {
+      "id": "dev-test-user",
+      "username": "${TEST_USER}",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "${TEST_USER}",
+      "lastName": "USER",
+      "email": "${TEST_USER}@mail.localtest.me",
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "${TEST_PASSWORD}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [],
+      "notBefore": 0,
+      "groups": [],
+      "clientRoles": {
+        "grafana": [
+          "grafanaadmin"
+        ]
+      }
+    },
+    {
+      "id": "grafana-admin",
+      "email": "${GF_ADMIN_USERNAME}@admin",
+      "username": "${GF_ADMIN_USERNAME}",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "${GF_ADMIN_PASSWORD}"
+        }
+      ],
+      "clientRoles": {
+        "grafana": [
+          "grafanaadmin"
+        ]
+      }
+    }
+  ],
+  "clients": [
+    {
+      "id": "desa-cli",
+      "clientId": "desa-cli",
+      "name": "Desa Client",
+      "description": "",
+      "rootUrl": "http://localhost:3178",
+      "adminUrl": "http://localhost:3178",
+      "baseUrl": "",
+      "enabled": true,
+      "publicClient": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    },
+    {
+      "id": "grafana",
+      "clientId": "grafana",
+      "name": "grafana",
+      "enabled": true,
+      "publicClient": true,
+      "rootUrl": "${GF_URL}/",
+      "adminUrl": "${GF_URL}/",
+      "baseUrl": "${GF_URL}/",
+      "redirectUris": [
+        "${GF_URL}/*"
+      ],
+      "webOrigins": [
+        "${GF_URL}/*"
+      ],"protocolMappers" : [ {
+        "id": "fb2a9eab-8eaa-4660-b6d8-40b09269b122",
+        "name" : "client roles",
+        "protocol" : "openid-connect",
+        "protocolMapper" : "oidc-usermodel-client-role-mapper",
+        "consentRequired" : false,
+        "config" : {
+          "multivalued" : "true",
+          "userinfo.token.claim" : "true",
+          "id.token.claim" : "true",
+          "access.token.claim" : "true",
+          "claim.name" : "roles",
+          "jsonType.label" : "String",
+          "usermodel.clientRoleMapping.clientId" : "grafana"
+        }
+      } ]
+
+    },
+    {
+      "clientId": "pgadmin",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${PGADMIN_CLIENT_SECRET}",
+      "redirectUris": [
+        "${PGADMIN_URL}/*"
+      ],
+      "webOrigins": [
+        "${PGADMIN_URL}/*"
+      ],
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "defaultClientScopes": ["openid","roles","profile","email"],
+      "optionalClientScopes": ["address","offline_access"],
+      "name" : "pgAdmin Client"
+    }
+  ],
+  "smtpServer": {}
+}

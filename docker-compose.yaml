@@ -1,0 +1,37 @@
+x-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KC_VERSION}
+    command: ["start-dev", "--import-realm"]
+    restart: unless-stopped
+    volumes:
+      - ./config/keycloak/realm.json:/opt/keycloak/data/import/realm.json:ro
+    ports:
+      - ${KC_PORT}:8080
+      - "8443:8443"
+    environment:
+      TZ: ${TZ}
+      KC_METRICS_ENABLED: true
+      KC_TRANSACTION_XA_ENABLED: false
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: false
+      KC_OVERRIDE: false
+      KC_LOG_LEVEL: ${KC_LOG_LEVEL}
+      KC_REALM_NAME: ${KC_REALM_NAME}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      
+      # estas variables de entorno son necesarias para reemplazar en el realm importado
+      GF_URL: ${GF_SERVER_ROOT_URL}
+      GF_ADMIN_USERNAME: ${GF_ADMIN_USERNAME}
+      GF_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD}
+      PGADMIN_URL: ${PGADMIN_URL}
+      PGADMIN_CLIENT_SECRET: ${PGADMIN_CLIENT_SECRET}
+      TEST_USER: ${TEST_USER}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+    logging: *logging
